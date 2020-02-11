@@ -8,7 +8,7 @@ class SnippetSerializer(serializers.ModelSerializer):
         model = Snippet
         fields = ['id', 'title', 'code', 'linenos', 'language', 'style', 'created']
 
-    # # 데이터를 보낸다는 것은 2가지 의미를 갖는다
+# # 데이터를 보낸다는 것은 2가지 의미를 갖는다
     # # 1. 새로운 데이터를 추가
     # # 2. 기존의 데이터를 업데이트
     # def create(self, validated_data):
