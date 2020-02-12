@@ -15,7 +15,7 @@ def snippet_list(request):
     if request.method == 'GET':
         snippets = Snippet.objects.all()
         serializer = SnippetSerializer(snippets, many=True)
-        return JsonResponse(serializer.data, safe=False) # safe=False 특수문자
+        return JsonResponse(serializer.data, safe=False)  # safe=False 특수문자
     elif request.method == 'POST':
         data = JSONParser().parse(request)
         serializer = SnippetSerializer(data=data)
@@ -28,7 +28,7 @@ def snippet_list(request):
 
 # id에 접근하면 그에 해당하는 데이터 가져오기
 @csrf_exempt
-def snippet_detail(request,pk):
+def snippet_detail(request, pk):
     snippet = get_object_or_404(Snippet, pk=pk)
     if request.method == 'GET':
         serializer = SnippetSerializer(snippet)
@@ -36,7 +36,7 @@ def snippet_detail(request,pk):
 
     elif request.method == 'PATCH':
         data = JSONParser().parse(request)
-        serializer = SnippetSerializer(snippet, data = data, partial=True) # partial=True 는 일부분만 업데이트 한다는 뜻이다.
+        serializer = SnippetSerializer(snippet, data=data, partial=True)  # partial=True 는 일부분만 업데이트 한다는 뜻이다.
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data)
@@ -44,5 +44,5 @@ def snippet_detail(request,pk):
 
     elif request.method == 'DELETE':
         snippet.delete()
-        return HttpResponse(status=status.HTTP_204_NO_CONTENT) # 데이터를 지우기 때문에 화면에 표시할 JSON데이터가 없고
-                                                               # 그렇기 때문에 HttpResponse 를 사용
+        return HttpResponse(status=status.HTTP_204_NO_CONTENT)  # 데이터를 지우기 때문에 화면에 표시할 JSON데이터가 없고
+        # 그렇기 때문에 HttpResponse 를 사용
