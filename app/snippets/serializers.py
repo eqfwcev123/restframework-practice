@@ -6,7 +6,7 @@ from snippets.models import Snippet
 class SnippetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Snippet
-        fields = ['id', 'title', 'code', 'linenos', 'language', 'style', 'created']
+        fields = ['pk', 'title', 'code', 'linenos', 'language', 'style', 'created']
 
 # # 데이터를 보낸다는 것은 2가지 의미를 갖는다
     # # 1. 새로운 데이터를 추가
