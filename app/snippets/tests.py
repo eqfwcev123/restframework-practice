@@ -1,8 +1,10 @@
 import random
 
+from model_bakery import baker
 from rest_framework import status
 from rest_framework.test import APITestCase
 
+from members.models import User
 from snippets.models import Snippet
 from snippets.serializers import SnippetSerializer
 
@@ -12,6 +14,7 @@ class SnippetTest(APITestCase):
     Postman이 하는일을 코드로 자동화
     DB는 분리됨
     """
+
     def test_snippet_list(self):
         url = '/api-view/snippets/'
         # self.client = requests와 같은 역할
@@ -24,8 +27,7 @@ class SnippetTest(APITestCase):
         self.assertEqual(len(response.data), 0)
 
         # 5개의 Snippet을 만들고 응답의 객체 개수 비교
-        for i in range(5):
-            Snippet.objects.create(code='1')
+        snippets = baker.make(Snippet, _quantity=5)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 5)
@@ -37,7 +39,7 @@ class SnippetTest(APITestCase):
             self.assertIn('language', snippet_data)
             self.assertIn('style', snippet_data)
 
-            self.assertEqual('1', snippet_data['code'])
+            # self.assertEqual('1', snippet_data['code'])
 
             # 전달된 Snippet object(dict)의 'pk'에 해당하는
             # 실제 Snippet model instance를
@@ -56,7 +58,9 @@ class SnippetTest(APITestCase):
         url = '/api-view/snippets/'
 
         # Snippet객체를 만들기 위해 클라이언트로부터 전달될 JSON객체를 Parse한 Python객체
+        user = baker.make(User)
         data = {
+            'author': user.pk,
             'code': 'def abc():',
         }
         response = self.client.post(url, data=data)
@@ -78,8 +82,7 @@ class SnippetTest(APITestCase):
         # 미리 객체를 5개 만들어놓는다
         # delete API를 적절히 실행 한 후, 객체가 4개가 되었는지 확인
         # 지운 객체가 실제로 존재하지 않는지 확인
-        snippets = [Snippet.objects.create(code='1') for i in range(5)]
-        self.assertEqual(Snippet.objects.count(), 5)
+        snippets = baker.make(Snippet, _quantity=5)
 
         snippet = random.choice(snippets)
         url = f'/api-view/snippets/{snippet.pk}/'
