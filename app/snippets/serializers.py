@@ -3,10 +3,19 @@ from rest_framework import serializers
 from snippets.models import Snippet
 
 
+# Serializer는 언제 필요한지
+# Post가 있을 경우
+#   List      PostSerializer
+#   Retrieve  PostRetrieveSerializer
+#   Update    PostUpdateSerializer
+#   Create    PostCreateSerializer
+
+
 class SnippetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Snippet
         fields = ['pk', 'author', 'title', 'code', 'linenos', 'language', 'style', 'created']
+
 
 # # 데이터를 보낸다는 것은 2가지 의미를 갖는다
 # # 1. 새로운 데이터를 추가
@@ -22,3 +31,12 @@ class SnippetSerializer(serializers.ModelSerializer):
 #         # instance.a = 'apple' 와 setattr(instance, a, 'apple') 와 동일
 #     instance.save()
 #     return instance
+
+
+class SnippetCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Snippet
+        fields = ('title', 'code', 'linenos', 'language', 'style', 'created')
+
+    def to_representation(self, instance):
+        return SnippetSerializer(instance).data

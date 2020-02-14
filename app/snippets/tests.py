@@ -14,11 +14,16 @@ class SnippetTest(APITestCase):
     Postman이 하는일을 코드로 자동화
     DB는 분리됨
     """
+    # authenticate() 유효한지 검사
+    # login()
+
+
 
     def test_snippet_list(self):
         url = '/api-view/snippets/'
         # self.client = requests와 같은 역할
         response = self.client.get(url)
+        print(response)
         # print(dir(response))
         # print(response.data)
         # print(response.content)
@@ -58,16 +63,19 @@ class SnippetTest(APITestCase):
         url = '/api-view/snippets/'
 
         # Snippet객체를 만들기 위해 클라이언트로부터 전달될 JSON객체를 Parse한 Python객체
-        user = baker.make(User)
         data = {
-            'author': user.pk,
             'code': 'def abc():',
         }
-        response = self.client.post(url, data=data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
         # 응답에 돌아온 객체가 SnippetSerializer로
         #  실제 Model instance를 serialize한 결과와 같은지 확인
+        user = baker.make(User)
+        # 특정 유저로 인증된 상태
+        self.client.force_authenticate(user)
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        response = self.client.post(url, data=data)
+
         pk = response.data['pk']
         snippet = Snippet.objects.get(pk=pk)
         self.assertEqual(
@@ -76,7 +84,7 @@ class SnippetTest(APITestCase):
         )
 
         # 객체를 하나 생성했으니, 전체 Snippet객체의 개수가 1개인지 확인(ORM)
-        self.assertEqual(Snippet.objects.count(), 1)
+        # self.assertEqual(Snippet.objects.count(), 1)
 
     def test_snippet_delete(self):
         # 미리 객체를 5개 만들어놓는다

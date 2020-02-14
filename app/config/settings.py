@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'rest_framework',
     'snippets.apps.SnippetsConfig',
-    'members.apps.MembersConfig'
+    'members.apps.MembersConfig',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -53,6 +54,13 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
 
 TEMPLATES = [
     {

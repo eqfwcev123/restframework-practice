@@ -8,8 +8,6 @@ router.register(r'snippets', viewsets.SnippetViewSet)
 
 app_name = 'snippets'
 urlpatterns_api_view = [
-    # path('snippets/', snippet_list),
-    # path('snippets/<int:pk>/', snippet_detail)
     path('snippets/', generic.SnippetListCreateAPIView.as_view()),
     path('snippets/<int:pk>/', generic.SnippetRetrieveUpdateDestroyAPIView.as_view()),
 ]
